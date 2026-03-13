@@ -1,0 +1,37 @@
+css = open('static/css/style.css', 'w')
+css.write("""
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Poppins, sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; color: #333; }
+nav { background: linear-gradient(135deg, #667eea, #764ba2); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 4px 15px rgba(102,126,234,0.4); }
+.nav-brand { font-size: 1.4rem; font-weight: 700; }
+.nav-links a { color: white; text-decoration: none; margin-left: 20px; font-weight: 500; background: rgba(255,255,255,0.2); padding: 7px 16px; border-radius: 20px; }
+.nav-links span { margin-right: 10px; opacity: 0.9; }
+.container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+.auth-container { background: white; padding: 45px; border-radius: 24px; box-shadow: 0 10px 40px rgba(102,126,234,0.2); max-width: 440px; margin: 60px auto; border-top: 5px solid #667eea; }
+.auth-container h2 { margin-bottom: 25px; color: #667eea; font-size: 2rem; font-weight: 700; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; margin-bottom: 7px; font-weight: 600; color: #555; font-size: 0.9rem; }
+.form-group input { width: 100%; padding: 13px 16px; border: 2px solid #e8ecf4; border-radius: 10px; font-size: 1rem; transition: all 0.3s; background: #f8f9ff; }
+.form-group input:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 4px rgba(102,126,234,0.1); }
+.btn-primary { width: 100%; padding: 14px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 15px rgba(102,126,234,0.4); }
+.btn-primary:hover { transform: translateY(-2px); }
+.auth-container p { text-align: center; margin-top: 22px; color: #888; }
+.auth-container a { color: #667eea; font-weight: 600; text-decoration: none; }
+.alert { padding: 13px 18px; border-radius: 10px; margin-bottom: 20px; font-weight: 500; }
+.alert-success { background: #d4edda; color: #155724; border-left: 4px solid #28a745; }
+.alert-error { background: #f8d7da; color: #721c24; border-left: 4px solid #dc3545; }
+.dashboard-header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 35px; border-radius: 20px; margin-bottom: 30px; box-shadow: 0 8px 25px rgba(102,126,234,0.35); }
+.dashboard-header h1 { font-size: 2rem; margin-bottom: 8px; font-weight: 700; }
+.dashboard-header p { opacity: 0.85; }
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+.stat-card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); text-align: center; border-top: 4px solid; transition: transform 0.3s; }
+.stat-card:hover { transform: translateY(-4px); }
+.stat-card:nth-child(1) { border-color: #667eea; }
+.stat-card:nth-child(2) { border-color: #f093fb; }
+.stat-card:nth-child(3) { border-color: #4facfe; }
+.stat-icon { font-size: 2rem; margin-bottom: 10px; }
+.stat-value { font-size: 1.8rem; font-weight: 700; color: #333; }
+.stat-label { color: #888; font-size: 0.85rem; margin-top: 4px; }
+""")
+css.close()
+print('CSS written successfully!')
