@@ -1,0 +1,8 @@
+venv/
+.env
+__pycache__/
+*.pyc
+*.pyo
+write_css.py
+static/write_css.py
+static/style.css
