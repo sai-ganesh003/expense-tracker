@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 from flask_login import login_required, current_user
 from datetime import datetime
 
@@ -10,15 +10,37 @@ def index():
     from app import mysql
     cur = mysql.connection.cursor()
 
-    # Get all expenses for this user
-    cur.execute("SELECT * FROM expenses WHERE user_id = %s ORDER BY date DESC", (current_user.id,))
+    # Get filter values from URL
+    category = request.args.get('category', '')
+    date_from = request.args.get('date_from', '')
+    date_to = request.args.get('date_to', '')
+
+    # Build query based on filters
+    query = "SELECT * FROM expenses WHERE user_id = %s"
+    params = [current_user.id]
+
+    if category:
+        query += " AND category = %s"
+        params.append(category)
+
+    if date_from:
+        query += " AND date >= %s"
+        params.append(date_from)
+
+    if date_to:
+        query += " AND date <= %s"
+        params.append(date_to)
+
+    query += " ORDER BY date DESC"
+
+    cur.execute(query, params)
     expenses = cur.fetchall()
 
-    # Total amount spent
+    # Total amount spent (all time)
     cur.execute("SELECT SUM(amount) FROM expenses WHERE user_id = %s", (current_user.id,))
     total = cur.fetchone()[0] or 0
 
-    # Total count
+    # Total count (all time)
     cur.execute("SELECT COUNT(*) FROM expenses WHERE user_id = %s", (current_user.id,))
     count = cur.fetchone()[0]
 
@@ -35,4 +57,7 @@ def index():
                            expenses=expenses,
                            total=round(total, 2),
                            count=count,
-                           month=round(month, 2))
+                           month=round(month, 2),
+                           category=category,
+                           date_from=date_from,
+                           date_to=date_to)

@@ -19,7 +19,7 @@
     </div>
     <div class="stat-card">
         <div class="stat-icon">📅</div>
-        <div class="stat-value">{{ month }}</div>
+        <div class="stat-value">₹{{ month }}</div>
         <div class="stat-label">This Month</div>
     </div>
 </div>
@@ -29,6 +29,36 @@
         <h3>Recent Expenses</h3>
         <a href="{{ url_for('expenses.add') }}" class="btn-add">➕ Add Expense</a>
     </div>
+
+    <!-- Filter Bar -->
+    <form method="GET" action="{{ url_for('dashboard.index') }}" class="filter-bar">
+        <div class="filter-group">
+            <label>Category</label>
+            <select name="category">
+                <option value="">All Categories</option>
+                <option value="Food" {% if category == 'Food' %}selected{% endif %}>🍔 Food</option>
+                <option value="Travel" {% if category == 'Travel' %}selected{% endif %}>✈️ Travel</option>
+                <option value="Bills" {% if category == 'Bills' %}selected{% endif %}>💡 Bills</option>
+                <option value="Shopping" {% if category == 'Shopping' %}selected{% endif %}>🛍️ Shopping</option>
+                <option value="Health" {% if category == 'Health' %}selected{% endif %}>💊 Health</option>
+                <option value="Entertainment" {% if category == 'Entertainment' %}selected{% endif %}>🎬 Entertainment</option>
+                <option value="Education" {% if category == 'Education' %}selected{% endif %}>📚 Education</option>
+                <option value="Other" {% if category == 'Other' %}selected{% endif %}>📦 Other</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>From Date</label>
+            <input type="date" name="date_from" value="{{ date_from }}">
+        </div>
+        <div class="filter-group">
+            <label>To Date</label>
+            <input type="date" name="date_to" value="{{ date_to }}">
+        </div>
+        <div class="filter-buttons">
+            <button type="submit" class="btn-filter">🔍 Filter</button>
+            <a href="{{ url_for('dashboard.index') }}" class="btn-clear">🔄 Clear</a>
+        </div>
+    </form>
 
     {% if expenses %}
     <div class="expenses-table">
@@ -61,7 +91,7 @@
     {% else %}
     <div class="empty-state">
         <div class="empty-icon">💰</div>
-        <p>No expenses yet! Click <strong>Add Expense</strong> to get started.</p>
+        <p>No expenses found! Try changing the filters or click <strong>Add Expense</strong>.</p>
     </div>
     {% endif %}
 </div>
