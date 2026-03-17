@@ -24,9 +24,11 @@ def load_user(user_id):
 
 from routes.auth import auth
 from routes.dashboard import dashboard
+from routes.expenses import expenses
 
 app.register_blueprint(auth)
 app.register_blueprint(dashboard)
+app.register_blueprint(expenses)
 
 if __name__ == '__main__':
     app.run(debug=True)
