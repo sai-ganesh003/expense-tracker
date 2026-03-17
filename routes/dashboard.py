@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
 from flask_login import login_required, current_user
 from datetime import datetime
 
@@ -10,12 +10,10 @@ def index():
     from app import mysql
     cur = mysql.connection.cursor()
 
-    # Get filter values from URL
     category = request.args.get('category', '')
     date_from = request.args.get('date_from', '')
     date_to = request.args.get('date_to', '')
 
-    # Build query based on filters
     query = "SELECT * FROM expenses WHERE user_id = %s"
     params = [current_user.id]
 
@@ -36,15 +34,12 @@ def index():
     cur.execute(query, params)
     expenses = cur.fetchall()
 
-    # Total amount spent (all time)
     cur.execute("SELECT SUM(amount) FROM expenses WHERE user_id = %s", (current_user.id,))
     total = cur.fetchone()[0] or 0
 
-    # Total count (all time)
     cur.execute("SELECT COUNT(*) FROM expenses WHERE user_id = %s", (current_user.id,))
     count = cur.fetchone()[0]
 
-    # This month's spending
     current_month = datetime.now().strftime('%Y-%m')
     cur.execute("SELECT SUM(amount) FROM expenses WHERE user_id = %s AND DATE_FORMAT(date, '%%Y-%%m') = %s",
                 (current_user.id, current_month))
@@ -61,3 +56,31 @@ def index():
                            category=category,
                            date_from=date_from,
                            date_to=date_to)
+
+
+@dashboard.route('/api/summary')
+@login_required
+def summary():
+    from app import mysql
+    cur = mysql.connection.cursor()
+
+    cur.execute("SELECT category, SUM(amount) FROM expenses WHERE user_id = %s GROUP BY category", (current_user.id,))
+    category_data = cur.fetchall()
+
+    cur.execute("""
+        SELECT DATE_FORMAT(date, '%%b %%Y') as month, SUM(amount)
+        FROM expenses
+        WHERE user_id = %s
+        GROUP BY DATE_FORMAT(date, '%%Y-%%m'), DATE_FORMAT(date, '%%b %%Y')
+        ORDER BY MIN(date) DESC
+        LIMIT 6
+    """, (current_user.id,))
+    monthly_data = cur.fetchall()
+    cur.close()
+
+    return jsonify({
+        'categories': [row[0] for row in category_data],
+        'category_amounts': [float(row[1]) for row in category_data],
+        'months': [row[0] for row in monthly_data],
+        'monthly_amounts': [float(row[1]) for row in monthly_data]
+    })

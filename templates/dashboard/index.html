@@ -24,13 +24,21 @@
     </div>
 </div>
 
+<div class="charts-grid">
+    <div class="chart-card">
+        <canvas id="pieChart"></canvas>
+    </div>
+    <div class="chart-card">
+        <canvas id="barChart"></canvas>
+    </div>
+</div>
+
 <div class="expenses-section">
     <div class="expenses-header">
         <h3>Recent Expenses</h3>
         <a href="{{ url_for('expenses.add') }}" class="btn-add">➕ Add Expense</a>
     </div>
 
-    <!-- Filter Bar -->
     <form method="GET" action="{{ url_for('dashboard.index') }}" class="filter-bar">
         <div class="filter-group">
             <label>Category</label>
