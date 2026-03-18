@@ -5,6 +5,7 @@ from config import Config
 
 app = Flask(__name__)
 app.config.from_object(Config)
+app.config['MYSQL_PORT'] = Config.MYSQL_PORT
 
 mysql = MySQL(app)
 
