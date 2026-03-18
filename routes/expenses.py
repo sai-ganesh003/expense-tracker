@@ -1,6 +1,7 @@
-
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, Response
 from flask_login import login_required, current_user
+import csv
+import io
 
 expenses = Blueprint('expenses', __name__)
 
@@ -59,3 +60,27 @@ def delete(id):
     cur.close()
     flash('Expense deleted!', 'success')
     return redirect(url_for('dashboard.index'))
+
+
+@expenses.route('/expenses/export')
+@login_required
+def export():
+    from app import mysql
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT date, category, description, amount FROM expenses WHERE user_id = %s ORDER BY date DESC",
+                (current_user.id,))
+    all_expenses = cur.fetchall()
+    cur.close()
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['Date', 'Category', 'Description', 'Amount (INR)'])
+    for expense in all_expenses:
+        writer.writerow(expense)
+
+    output.seek(0)
+    return Response(
+        output,
+        mimetype='text/csv',
+        headers={'Content-Disposition': 'attachment; filename=expenses.csv'}
+    )
